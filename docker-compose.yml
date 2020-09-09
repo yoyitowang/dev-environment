@@ -1,0 +1,48 @@
+version: '3'
+
+services:
+  database:
+    container_name: NCHC_mysql
+    image: mysql:8.0
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+    volumes:
+      - ./vol/mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: NCHC@mysql
+      TZ: Asia/Taipei
+    ports:
+      - "3306:3306"
+    networks:
+      - NCHC
+  grafana:
+    container_name: NCHC_grafana
+    image: grafana/grafana:7.1.5
+    restart: unless-stopped
+    user: "472"
+    logging:
+      driver: "json-file"
+    volumes:
+      - ./vol/grafana:/var/lib/grafana
+    environment:
+      TZ: Asia/Taipei
+    ports:
+      - "3000:3000"
+    networks:
+      - NCHC
+  swagager-ui:
+    container_name: NCHC_swagger
+    image: swaggerapi/swagger-ui:v3.32.5
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+    environment:
+      TZ: Asia/Taipei
+    ports:
+      - "80:8080"
+    networks:
+      - NCHC
+
+networks:
+  NCHC:
