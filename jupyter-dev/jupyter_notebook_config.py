@@ -8,7 +8,7 @@ import errno
 import stat
 
 c = get_config()
-c.NotebookApp.token = ''
+c.NotebookApp.token = '6246bf473-6811-4302-8201-54401b0a9abb'
 c.NotebookApp.ip = '0.0.0.0'
 c.NotebookApp.port = 8888
 c.NotebookApp.open_browser = False

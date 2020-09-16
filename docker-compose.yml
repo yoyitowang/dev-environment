@@ -28,7 +28,7 @@ services:
     environment:
       TZ: Asia/Taipei
     ports:
-      - "3000:3000"
+      - "10303:3000"
     networks:
       - NCHC
   swagager-ui:
@@ -40,7 +40,21 @@ services:
     environment:
       TZ: Asia/Taipei
     ports:
-      - "80:8080"
+      - "10302:8080"
+    networks:
+      - NCHC
+  jupyter:
+    container_name: NCHC_jupyterlab
+    image: jupyter-dev
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+    volumes:
+      - ./vol/jupyter/:/home/jovyan/work
+    environment:
+      TZ: Asia/Taipei
+    ports:
+      - "10301:8888"
     networks:
       - NCHC
 
