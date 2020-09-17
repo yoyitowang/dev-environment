@@ -22,9 +22,9 @@ RUN apt-get update && apt-get install -yq wget --no-install-recommends \
 #    && apt-get purge --auto-remove -y curl \
     && rm -rf /src/*.deb
 
-COPY ./requirements.txt /tmp/
-COPY ./chromedriver /usr/bin/
-COPY ./jupyter_notebook_config.py /etc/jupyter/jupyter_notebook_config.py
+COPY requirements.txt /tmp/
+COPY chromedriver /usr/bin/
+COPY $PWD/jupyter_notebook_config.py /etc/jupyter/jupyter_notebook_config.py
 RUN chmod +x /usr/bin/chromedriver
 RUN pip3 install -r /tmp/requirements.txt
 

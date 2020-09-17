@@ -45,7 +45,10 @@ services:
       - NCHC
   jupyter:
     container_name: NCHC_jupyterlab
-    image: jupyter-dev
+    image: jupyter-dev:latest
+    build:
+      context: ./jupyter-dev
+      dockerfile: /home/centos/dev/jupyter-dev/Dockerfile
     restart: unless-stopped
     logging:
       driver: "json-file"
