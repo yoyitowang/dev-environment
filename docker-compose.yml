@@ -10,7 +10,7 @@ services:
     volumes:
       - ./vol/mysql:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: NCHC@mysql
+      MYSQL_ROOT_PASSWORD: abcde123@Test
       TZ: Asia/Taipei
     ports:
       - "3306:3306"
@@ -50,7 +50,7 @@ services:
     logging:
       driver: "json-file"
     volumes:
-      - ./vol/jupyter/:/home/jovyan/work
+      - ./vol/jupyter:/home/jovyan/NCHC
     environment:
       TZ: Asia/Taipei
     ports:
