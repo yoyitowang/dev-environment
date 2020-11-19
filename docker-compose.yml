@@ -11,6 +11,11 @@ services:
       - ./vol/mysql:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: abcde123@Test
+      MYSQL_DATABASE: codimd
+      MYSQL_USER: codimd
+      MYSQL_PASSWORD: codimd@testing
+      PGID: 1000
+      PUID: 1000
       TZ: Asia/Taipei
     ports:
       - "3306:3306"
@@ -45,10 +50,10 @@ services:
       - NCHC
   jupyter:
     container_name: NCHC_jupyterlab
-    image: jupyter-dev:latest
-    build:
-      context: ./jupyter-dev
-      dockerfile: /home/centos/dev/jupyter-dev/Dockerfile
+    image: jupyter/minimal-notebook
+#     build:
+#      context: ./jupyter-dev
+#      dockerfile: /home/centos/dev/jupyter-dev/Dockerfile
     restart: unless-stopped
     logging:
       driver: "json-file"
@@ -60,6 +65,56 @@ services:
       - "10301:8888"
     networks:
       - NCHC
-
+  gitlab:
+    container_name: NCHC_gitlab
+    image: gitlab/gitlab-ee
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+    environment:
+      TZ: Asia/Taipei
+    ports:
+      - "443:443"
+      - "80:80"
+#      - "22:22"
+    volumes:
+      - ./vol/gitlab/config:/etc/gitlab
+      - ./vol/gitlab/logs:/var/log/gitlab
+      - ./vol/gitlab/data:/var/opt/gitlab
+    networks:
+      - NCHC
+  codimd:
+    image: linuxserver/codimd:latest
+    container_name: NCHC_codimd
+    restart: unless-stopped
+    depends_on:
+      - database
+    volumes:
+      - ./vol/codimd/config:/config
+    environment:
+      DB_HOST: database
+      DB_USER: codimd
+      DB_PASS: codimd@testing
+      DB_NAME: codimd
+      DB_PORT: 3306
+      PGID: 1000
+      PUID: 1000
+      TZ: Asia/Taipei
+    ports:
+      - "3000:3000"
+    networks:
+      - NCHC
+  jenkins:
+    container_name: NCHC_jenkins
+    image: jenkins/jenkins:2.249.3-lts-centos7
+    restart: unless-stopped
+    volumes:
+      - ./vol/jenkins:/var/jenkins_home
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    networks:
+      - NCHC
+    
 networks:
   NCHC:
