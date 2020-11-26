@@ -10,7 +10,7 @@ services:
     volumes:
       - ./vol/mysql:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: abcde123@Test
+      MYSQL_ROOT_PASSWORD:
       TZ: Asia/Taipei
     ports:
       - "3306:3306"
