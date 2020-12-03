@@ -10,17 +10,15 @@ services:
     volumes:
       - ./vol/mysql:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: abcde123@Test
-      MYSQL_DATABASE: codimd
-      MYSQL_USER: codimd
-      MYSQL_PASSWORD: codimd@testing
-      PGID: 1000
-      PUID: 1000
-      TZ: Asia/Taipei
+      - MYSQL_ROOT_PASSWORD=NchC@2020pwd
+      - MYSQL_DATABASE=codimd
+      - MYSQL_USER=codimd
+      - MYSQL_PASSWORD=CodimD2020pwd
+      - PGID=1000
+      - PUID=1000
+      - TZ=Asia/Taipei
     ports:
       - "3306:3306"
-    networks:
-      - NCHC
   grafana:
     container_name: NCHC_grafana
     image: grafana/grafana:7.1.5
@@ -34,9 +32,7 @@ services:
       TZ: Asia/Taipei
     ports:
       - "10303:3000"
-    networks:
-      - NCHC
-  swagager-ui:
+  swagger-ui:
     container_name: NCHC_swagger
     image: swaggerapi/swagger-ui:v3.32.5
     restart: unless-stopped
@@ -46,14 +42,12 @@ services:
       TZ: Asia/Taipei
     ports:
       - "10302:8080"
-    networks:
-      - NCHC
   jupyter:
     container_name: NCHC_jupyterlab
-    image: jupyter/minimal-notebook
-#     build:
-#      context: ./jupyter-dev
-#      dockerfile: /home/centos/dev/jupyter-dev/Dockerfile
+    image: jupyter-dev:latest
+    build:
+      context: ./jupyter-dev
+      dockerfile: ${PWD}/jupyter-dev/Dockerfile
     restart: unless-stopped
     logging:
       driver: "json-file"
@@ -63,8 +57,6 @@ services:
       TZ: Asia/Taipei
     ports:
       - "10301:8888"
-    networks:
-      - NCHC
   gitlab:
     container_name: NCHC_gitlab
     image: gitlab/gitlab-ee
@@ -76,34 +68,26 @@ services:
     ports:
       - "443:443"
       - "80:80"
-#      - "22:22"
+      - "23:22"
     volumes:
       - ./vol/gitlab/config:/etc/gitlab
       - ./vol/gitlab/logs:/var/log/gitlab
       - ./vol/gitlab/data:/var/opt/gitlab
-    networks:
-      - NCHC
   codimd:
-    image: linuxserver/codimd:latest
+    image: nabo.codimd.dev/hackmdio/hackmd:2.2.0
     container_name: NCHC_codimd
     restart: unless-stopped
+    volumes:
+      - ./vol/codimd/uploads:/home/hackmd/app/public/uploads
     depends_on:
       - database
-    volumes:
-      - ./vol/codimd/config:/config
     environment:
-      DB_HOST: database
-      DB_USER: codimd
-      DB_PASS: codimd@testing
-      DB_NAME: codimd
-      DB_PORT: 3306
-      PGID: 1000
-      PUID: 1000
-      TZ: Asia/Taipei
+      - CMD_DB_URL=mysql://codimd:CodimD2020pwd@database/codimd
+      - PGID=1000
+      - PUID=1000
+      - TZ=Asia/Taipei
     ports:
       - "3000:3000"
-    networks:
-      - NCHC
   jenkins:
     container_name: NCHC_jenkins
     image: jenkins/jenkins:2.249.3-lts-centos7
@@ -113,8 +97,9 @@ services:
     ports:
       - "8080:8080"
       - "50000:50000"
-    networks:
-      - NCHC
-    
-networks:
-  NCHC:
+  swagger-editor:
+    container_name: NCHC_swagger_editor
+    image: swaggerapi/swagger-editor
+    restart: unless-stopped
+    ports:
+      - "10304:8080"
