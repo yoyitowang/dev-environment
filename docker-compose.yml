@@ -10,10 +10,10 @@ services:
     volumes:
       - ./vol/mysql:/var/lib/mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=NchC@2020pwd
+      - MYSQL_ROOT_PASSWORD=
       - MYSQL_DATABASE=codimd
       - MYSQL_USER=codimd
-      - MYSQL_PASSWORD=CodimD2020pwd
+      - MYSQL_PASSWORD=
       - PGID=1000
       - PUID=1000
       - TZ=Asia/Taipei
@@ -82,7 +82,7 @@ services:
     depends_on:
       - database
     environment:
-      - CMD_DB_URL=mysql://codimd:CodimD2020pwd@database/codimd
+      - CMD_DB_URL=
       - PGID=1000
       - PUID=1000
       - TZ=Asia/Taipei
