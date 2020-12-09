@@ -10,10 +10,10 @@ services:
     volumes:
       - ./vol/mysql:/var/lib/mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=
+      - MYSQL_ROOT_PASSWORD=<Mysql password>
       - MYSQL_DATABASE=codimd
       - MYSQL_USER=codimd
-      - MYSQL_PASSWORD=
+      - MYSQL_PASSWORD=<Codimd password>
       - PGID=1000
       - PUID=1000
       - TZ=Asia/Taipei
@@ -63,12 +63,16 @@ services:
     restart: unless-stopped
     logging:
       driver: "json-file"
+    hostname: "{host-ip}"
     environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'http://{host-ip}'
+        gitlab_rails['gitlab_shell_ssh_port'] = 2323
       TZ: Asia/Taipei
     ports:
       - "443:443"
       - "80:80"
-      - "23:22"
+      - "2323:22"
     volumes:
       - ./vol/gitlab/config:/etc/gitlab
       - ./vol/gitlab/logs:/var/log/gitlab
@@ -77,12 +81,10 @@ services:
     image: nabo.codimd.dev/hackmdio/hackmd:2.2.0
     container_name: NCHC_codimd
     restart: unless-stopped
-    volumes:
-      - ./vol/codimd/uploads:/home/hackmd/app/public/uploads
     depends_on:
       - database
     environment:
-      - CMD_DB_URL=
+      - CMD_DB_URL=mysql://codimd:<Codimd password>@database/codimd
       - PGID=1000
       - PUID=1000
       - TZ=Asia/Taipei
